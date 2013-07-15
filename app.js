@@ -5,13 +5,14 @@ var express = require('express'),
     routes = require('./routes'),
     request = require('request');
 
-var app = module.exports = express.createServer();
+var app = express();
 
 // Configuration
 app.configure(function () {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
     app.use(express.bodyParser());
+    app.use(express.cookieParser());
     app.use(express.methodOverride());
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
@@ -59,23 +60,27 @@ app.get('/callback', function (req, res) {
     };
 
     request(url, opt, function (error, response, body) {
-        console.log(error);
-        console.log(response);
-        console.log(body);
+        // console.log(error);
+        // console.log(response);
+        // console.log(body);
 
         if (!error && response.statusCode == 200) {
             console.log(body) // Print the google web page.
+            var jdata = JSON.parse(body);
+            var token = jdata['OAuthToken'];
+
+            res.cookie('bechtel_token', token, {
+              maxAge: 1000 * 60 * 60 * 60 * 24 * 365,
+              httpOnly: false
+            });            
+
+            res.send('token: ' + token);
+
+        } else {
+            res.send('OAuth failed.');
         }
+
     })
-
-    // body = {"com.pingidentity.plugin.instanceid":"PSN2AgentlessDemo","subject":"clmatthi@bechtel.com","BechtelEmployeeNumber":"clmatthi@bechtel.com","BechtelEmailAddress":"clmatthi@bechtel.com","instanceId":"PSN2AgentlessDemo","EmploymentStatus":"Employee","WorkPhoneNumber":"+1 415 7688484","LastName":"Matthieu","sessionid":"So9oDUnHfGVStaWaF0rRY9bOQRO","Title":"Systems & Technology Architect","authnCtx":"urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified","partnerEntityID":"PSN2-SAML2-Entity","BechtelUserName":"clmatthi","FirstName":" Christopher","IsBechtelEmployee":"1","BechtelDomain":"IAMERS","authnInst":"2012-12-03 11:05:31-0500","EMailAddress":"clmatthi@bechtel.com","OAuthToken":"PB05ZF1tKKSA6u2hGMnip34bCw0j"}
-
-    // @jdata = JSON.parse(body)
-    // EMail = @jdata['EMailAddress']
-
-    res.send('sso successful');
-
-    // redirect "/"
 
 });
 
