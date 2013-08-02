@@ -3,7 +3,8 @@
  */
 var express = require('express'),
     routes = require('./routes'),
-    request = require('request');
+    request = require('request'),
+    config = require('./config');
 
 var app = express();
 
@@ -17,15 +18,6 @@ app.configure(function () {
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
 });
-
-
-// LOCALHOST
-var port = 60883;
-var appKey = "43a6aba88a422d696c1d9f50e8e4831f";
-var pingUname = "PSN2AgentlessDemoUser";
-var pingPwd = "jlAclUVoA6oAfrlUbOEMo-Troe*";
-var pingInanceId = "PSN2AgentlessDemo";
-var domain = "http:localhost:" + port;
 
 app.configure('development', function () {
     app.use(express.errorHandler({
@@ -45,6 +37,7 @@ app.get('/markets/:project', routes.markets);
 app.get('/sites/:market', routes.sites);
 app.get('/getMarkets', routes.getMarkets);
 app.get('/getSites/:market', routes.getSites);
+app.get('/getFleet', routes.getFleet);
 
 app.get('/logout', function (req, res) {
     res.clearCookie('bechtel_token');
@@ -63,16 +56,13 @@ app.get('/callback', function (req, res) {
           'REF': ref
         },
         headers: {
-            'ping.uname': pingUname,
-            'ping.pwd': pingPwd,
-            'ping.instanceId': pingInanceId
+            'ping.uname': config.pingUname,
+            'ping.pwd': config.pingPwd,
+            'ping.instanceId': config.pingInanceId
         }
     };
 
     request(url, opt, function (error, response, body) {
-        // console.log(error);
-        // console.log(response);
-        // console.log(body);
 
         if (!error && response.statusCode == 200) {
             console.log(body) // Print the google web page.
@@ -84,8 +74,6 @@ app.get('/callback', function (req, res) {
               httpOnly: false
             });            
 
-            // res.send('token: ' + token);
-            // res.render('main', { token: token })
             res.redirect('/main');
 
         } else {
@@ -97,6 +85,6 @@ app.get('/callback', function (req, res) {
 
 });
 
-app.listen(port, function () {
-    console.log("Express server listening on port %d in %s mode", port, app.settings.env);
+app.listen(config.port, function () {
+    console.log("Express server listening on port %d in %s mode", config.port, app.settings.env);
 });

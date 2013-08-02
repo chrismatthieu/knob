@@ -1,4 +1,23 @@
 var request = require('request');
+var sha1 = require('sha1');
+var config = require('./../config');
+
+function makeStamp(d) { // Date d
+    var y = d.getUTCFullYear(),
+        M = d.getUTCMonth() + 1,
+        D = d.getUTCDate(),
+        h = d.getUTCHours(),
+        m = d.getUTCMinutes(),
+        s = d.getUTCSeconds(),
+        pad = function (x) {
+            x = x+'';
+            if (x.length === 1) {
+                return '0' + x;
+            }
+            return x;
+        };
+        return y + pad(M) + pad(D) + pad(h) + pad(m) + pad(s);
+}
 
 exports.index = function(req, res){
   if (req.cookies.bechtel_token == undefined) {
@@ -131,8 +150,6 @@ exports.getSites = function(req, res){
     res.redirect('/');
   } else {
 
-    console.log('https://api.becpsn.com/svc1/v2/tracking/towers/markets/' + req.params.market + '/Sites');
-
     request(
       { method: 'GET'
       , uri: 'https://api.becpsn.com/svc1/v2/tracking/towers/markets/' + req.params.market + '/Sites'
@@ -157,3 +174,59 @@ exports.getSites = function(req, res){
     // res.render('main', { markers: {} })
   }
 };
+
+exports.getFleet = function(req, res){
+  // Using FleetMatics API
+  
+  if (req.cookies.bechtel_token == undefined) {
+    res.redirect('/');
+  } else {
+
+    // var fleetguid = "672F6A41-F9E7-E211-9F99-AC162DBDB9D7";
+    var fleetguid = config.fleetguid;
+    var fleettoken = config.fleettoken;
+    var now = new Date();
+    var timestamp = makeStamp(now);
+    var rawsig = fleetguid + timestamp
+    var hash = sha1(rawsig);
+
+    console.log('guid: ' + fleetguid);
+    console.log('token: ' + fleettoken);
+    console.log('timestamp: ' + timestamp);
+    console.log('sig: ' + hash);
+
+    var fleeturi = "http://www.fleetmatics-usa.com/FMAPI/apitrackingservice.svc/getvehpos"
+    var qs ="t=" + fleettoken + "&s=" + hash + "&ts=" + timestamp;
+    console.log('uri' + fleeturi);
+    console.log('qs' + qs);
+
+    request(
+      { method: 'GET'
+      , uri: fleeturi
+      , qs: qs
+      , 'content-type': 'application/xml'
+      }
+    , function (error, response, body) {
+        // if(response.statusCode == 200){
+        //   console.log(body);
+        //   res.send(body);
+        // } else if(response.statusCode == 403) {
+        //   res.clearCookie('bechtel_token');
+        //   res.redirect('/');
+        // } else {
+        //   console.log('error: '+ response.statusCode)
+        //   console.log(body)
+        //   res.send({});
+        // }
+
+          console.log('error: '+ response.statusCode);
+          console.log(body);
+
+      }
+    )
+
+    // res.render('main', { markers: {} })
+  }
+};
+
+
