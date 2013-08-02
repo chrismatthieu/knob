@@ -21,10 +21,10 @@ app.configure(function () {
 
 // LOCALHOST
 var port = 60883;
-var appKey = "";
-var pingUname = "";
-var pingPwd = "";
-var pingInanceId = "";
+var appKey = "43a6aba88a422d696c1d9f50e8e4831f";
+var pingUname = "PSN2AgentlessDemoUser";
+var pingPwd = "jlAclUVoA6oAfrlUbOEMo-Troe*";
+var pingInanceId = "PSN2AgentlessDemo";
 var domain = "http:localhost:" + port;
 
 app.configure('development', function () {
@@ -40,6 +40,16 @@ app.configure('production', function () {
 
 // Routes
 app.get('/', routes.index);
+app.get('/main', routes.main);
+app.get('/markets/:project', routes.markets);
+app.get('/sites/:market', routes.sites);
+app.get('/getMarkets', routes.getMarkets);
+app.get('/getSites/:market', routes.getSites);
+
+app.get('/logout', function (req, res) {
+    res.clearCookie('bechtel_token');
+    res.redirect('/');
+});    
 
 app.get('/callback', function (req, res) {
 
@@ -74,10 +84,13 @@ app.get('/callback', function (req, res) {
               httpOnly: false
             });            
 
-            res.send('token: ' + token);
+            // res.send('token: ' + token);
+            // res.render('main', { token: token })
+            res.redirect('/main');
 
         } else {
-            res.send('OAuth failed.');
+            // res.send('OAuth failed.');
+            res.render('error', { error: JSON.stringify(error) })
         }
 
     })

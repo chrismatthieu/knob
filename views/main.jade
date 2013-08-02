@@ -1,0 +1,44 @@
+extends layout
+
+block body
+
+  div(data-role="page")
+    div(data-role="header", data-theme="b")
+      h1 Towers
+      //- a(href="/", data-icon="home") Home
+
+    img.main-image(src="/images/network.png", width="100%", height="300px")
+    div(data-role="content")
+      section.above-list
+      ul(data-role="listview")
+
+        if projects && projects.length > 0
+          for p in projects
+            li
+              a(href="/markets/#{p.ProjectId}")
+                strong #{p.ProjectName}
+          else
+            li
+              a(href="/markets/1")
+                strong No markets (refresh)
+
+
+
+    div.ui-bar(data-role="footer", data-position="fixed")
+      div.ui-navbar.ui-mini(data-role="navbar", role="navigation")
+        ul.ui-grid-d
+          li
+            a(href="/main", data-icon="home", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+              span.ui-btn-inner 
+                span.ui-btn-text Home
+              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+          li
+            a(href="/markets/1", data-icon="star", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+              span.ui-btn-inner 
+                span.ui-btn-text Markets
+              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+          li
+            a(href="/logout", data-icon="delete", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+              span.ui-btn-inner 
+                span.ui-btn-text Logout
+              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;

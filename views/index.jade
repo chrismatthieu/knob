@@ -1,2 +1,30 @@
-h1 Bechtel SSO
-a(href="https://sso.mypsn.com/sp/startSSO.ping?PartnerIdpId=PSN2-SAML2-Entity&TargetResource=http://localhost:60883/callback") Login
+extends layout
+
+block body
+
+  div(data-role="page")
+    div(data-role="header", data-theme="b")
+      h1 Towers
+      //- a(href="/", data-icon="home") Home
+
+    img.main-image(src="/images/network.png", width="100%", height="300px")
+    div(data-role="content")
+      section.above-list
+        //- h1 Welcome to Towers
+      ul(data-role="listview")
+        li
+          a(href="https://sso.mypsn.com/sp/startSSO.ping?PartnerIdpId=PSN2-SAML2-Entity&TargetResource=http://localhost:60883/callback") Login
+
+
+
+    div.ui-bar(data-role="footer", data-position="fixed")
+      div.ui-navbar.ui-mini(data-role="navbar", role="navigation")
+        ul.ui-grid-d
+          li
+            span(data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+              span.ui-btn-inner 
+                span.ui-btn-text 
+              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+
+
+

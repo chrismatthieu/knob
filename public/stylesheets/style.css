@@ -1,8 +1,18 @@
-body {
+/*body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}*/
+.welcome {
+  line-height: 1.5;
+  color: #555;
+}
+#map-canvas {
+  min-height: 100%;
+  min-width: 100%;
+  height: 100%;
+  width: 100%;
 }
