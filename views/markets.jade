@@ -14,7 +14,7 @@ block body
         if markets && markets.length > 0
           for m in markets
             li
-              a(href="/sites/#{m.MarketId}")
+              a(href="/sites/#{m.MarketId}", data-ajax="false")
                 strong #{m.MarketName}
         else
           li

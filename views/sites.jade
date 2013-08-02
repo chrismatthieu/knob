@@ -32,16 +32,6 @@ block body
 
   script.
 
-    //- $(document).delegate('#sitesmap', 'pageinit', function () {
-    //-     initialize();
-    //- });           
-
-    //- $( '#sitesmap' ).on( 'pageinit',function(event){
-    //-   alert( 'This page was just enhanced by jQuery Mobile!' );
-    //-   initialize();
-    //- });    
-
-
     function resizeMap() {
       $('[data-role=content]')
             .height(
@@ -51,10 +41,7 @@ block body
             );    
     }
 
-    //- $(document).ready(function() {
     function initialize() {
-    //- $(document).on("pageinit", "#sitesmap", function() {
-    //- $( '#sitesmap' ).on( 'pageinit',function(event){
 
       var map = new google.maps.Map(document.getElementById("map-canvas"));
 
@@ -73,9 +60,8 @@ block body
       resizeMap();
       google.maps.event.trigger(map, 'resize');    
       
-    //- };    
 
-    function addMarker (lat, long, title, description) {
+      function addMarker (lat, long, title, description) {
         var myLatlng = new google.maps.LatLng(lat,long);
         var marker = new google.maps.Marker({ position: myLatlng, map: map });
 
@@ -124,10 +110,5 @@ block body
 
     };    
 
-
-    //- $(document).on("pageshow", "#sitesmap", function() { 
-    //-   //- alert( 'This page was just enhanced by jQuery Mobile!' );
-    //-   initialize();
-    //- });
 
 
