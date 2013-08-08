@@ -6,20 +6,60 @@ block body
     div(data-role="header", data-theme="b")
       h1 Towers
 
-    //- img.main-image(src="/images/network.png", width="100%", height="300px")
+    img.main-image(src="/images/network.png", width="100%", height="300px")
     div(data-role="content")
-      section.above-list
-      ul(data-role="listview")
+      section.above-list Select a map overlay:
 
-        if markets && markets.length > 0
-          for m in markets
-            li
-              a(href="/sites/#{m.MarketId}", data-ajax="false")
-                strong #{m.MarketName}
-        else
-          li
-            a(href="/markets/1")
-              strong No markets (refresh)
+    span.ui-btn-inner.ui-btn-corner-all
+      span.ui-btn-text
+        span.ui-icon.ui-icon-arrow-d.ui-icon-shadow
+    select#mapTemplate(onchange="saveSelectedValues();")
+      option default
+      option terrain
+      option toner
+      option watercolor
+
+    script.
+      var maptemplate = localStorage.getItem("maptemplate");
+      if(maptemplate == null) {
+        //- set default maptemplate (toner, terrain, watercolor)
+        maptemplate = "default"
+      }
+      //- alert(maptemplate);
+      var el = $('#mapTemplate');
+
+      // Select the relevant option, de-select any others
+      el.val(maptemplate).attr('selected', true).siblings('option').removeAttr('selected');
+
+      // Initialize the selectmenu
+      el.selectmenu();
+
+      // jQM refresh
+      el.selectmenu("refresh", true);
+
+      function saveSelectedValues(){
+          var mapSelect = document.getElementById("mapTemplate").value;
+          if(mapSelect == 'default'){
+            localStorage.setItem("maptemplate", null);
+          } else {
+            localStorage.setItem("maptemplate", mapSelect);
+          }
+
+      }        
+
+
+
+    //- div(data-role="fieldcontain")
+    //-   fieldset(data-role="controlgroup", data-type="horizontal", data-native-menu="false")
+    //-     legend Map Overlay
+    //-       input#radio-default(type="radio", name="radio-maps", value="default")
+    //-       label(for="radio-default") default
+
+    //-       input#radio-toner(type="radio", name="radio-maps", value="toner")
+    //-       label(for="radio-toner") toner
+
+    //-       input#radio-terrain(type="radio", name="radio-maps", value="terrain")
+    //-       label(for="radio-terrain") terrain
 
 
 

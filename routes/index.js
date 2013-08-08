@@ -115,6 +115,15 @@ exports.sites = function(req, res){
   }
 };
 
+exports.settings = function(req, res){
+  if (req.cookies.bechtel_token == undefined) {
+    res.redirect('/');
+  } else {
+    res.render('settings', { })
+  }
+};
+
+
 exports.getMarkets = function(req, res){
   if (req.cookies.bechtel_token == undefined) {
     res.redirect('/');
@@ -177,7 +186,7 @@ exports.getSites = function(req, res){
 
 exports.getFleet = function(req, res){
   // Using FleetMatics API
-  
+
   if (req.cookies.bechtel_token == undefined) {
     res.redirect('/');
   } else {
@@ -188,7 +197,7 @@ exports.getFleet = function(req, res){
     var now = new Date();
     var timestamp = makeStamp(now);
     var rawsig = fleetguid + timestamp
-    var hash = sha1(rawsig);
+    var hash = sha1(rawsig).toUpperCase();
 
     console.log('guid: ' + fleetguid);
     console.log('token: ' + fleettoken);
@@ -196,15 +205,18 @@ exports.getFleet = function(req, res){
     console.log('sig: ' + hash);
 
     var fleeturi = "http://www.fleetmatics-usa.com/FMAPI/apitrackingservice.svc/getvehpos"
+    // var fleeturi = "http://www.fleetmatics-usa.com/FMAPI/apitrackingservice.svc"
     var qs ="t=" + fleettoken + "&s=" + hash + "&ts=" + timestamp;
-    console.log('uri' + fleeturi);
-    console.log('qs' + qs);
+    console.log('uri: ' + fleeturi);
+    console.log('qs: ' + qs);
+
+    console.log(fleeturi + '?t=' + fleettoken + '&s=' + hash + '&ts=' + timestamp);
 
     request(
       { method: 'GET'
-      , uri: fleeturi
+      , uri: fleeturi 
       , qs: qs
-      , 'content-type': 'application/xml'
+      , 'Content-Type': 'application/xml'
       }
     , function (error, response, body) {
         // if(response.statusCode == 200){

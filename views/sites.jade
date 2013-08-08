@@ -23,6 +23,11 @@ block body
                 span.ui-btn-text Markets
               span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
           li
+            a(href="/settings", data-icon="gear", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+              span.ui-btn-inner
+                span.ui-btn-text Settings
+              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+          li
             a(href="/logout", data-icon="delete", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
               span.ui-btn-inner 
                 span.ui-btn-text Logout
@@ -48,12 +53,33 @@ block body
       navigator.geolocation.getCurrentPosition(success);
       function success(position) {
         var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            
-        map.setOptions({
-          zoom: 10,
-          center: pos,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
+
+        if (localStorage.getItem("maptemplate") != 'toner' && localStorage.getItem("maptemplate") != 'terrain' && localStorage.getItem("maptemplate") != 'watercolor') { 
+
+         map.setOptions({
+            zoom: 10,
+            center: pos,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          });
+
+        } else {
+
+          // replace "toner" here with "terrain" or "watercolor"
+          var layer = localStorage.getItem("maptemplate");
+
+          map.setOptions({
+            zoom: 10,
+            center: pos,
+            mapTypeId: layer,
+            mapTypeControlOptions: {
+                mapTypeIds: [layer]
+            }
+
+          });
+
+          map.mapTypes.set(layer, new google.maps.StamenMapType(layer));      
+
+        }
 
       }      
 
@@ -92,17 +118,23 @@ block body
 
       }
 
+      function sleep(milliSeconds){
+        var startTime = new Date().getTime(); // get the current time
+        while (new Date().getTime() < startTime + milliSeconds); // hog cpu
+      }
 
       $.ajax({
         url: "/getSites/#{market}",
         cache: false,
         type: "GET",
         success: function(data) { 
+          sleep(1000); // added to give map time to load
           var jdata = JSON.parse(data);
           $.each(jdata.items, function(index, element) {
             addMarker(element.Latitude, element.Longitude, element.SiteName, 'GC: ' + element.GeneralContractorPOC + ' (' + element.GeneralContractorName + ')<br>Status: ' + element.SiteStatus)
           });
-          var pos = new google.maps.LatLng(jdata.items[0].Latitude, jdata.items[0].Longitude);
+          //- var pos = new google.maps.LatLng(jdata.items[0].Latitude, jdata.items[0].Longitude);
+          var pos = new google.maps.LatLng(jdata.items[1].Latitude, jdata.items[1].Longitude);
           map.setCenter(pos)
 
         }  

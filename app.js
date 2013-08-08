@@ -35,6 +35,7 @@ app.get('/', routes.index);
 app.get('/main', routes.main);
 app.get('/markets/:project', routes.markets);
 app.get('/sites/:market', routes.sites);
+app.get('/settings', routes.settings);
 app.get('/getMarkets', routes.getMarkets);
 app.get('/getSites/:market', routes.getSites);
 app.get('/getFleet', routes.getFleet);
