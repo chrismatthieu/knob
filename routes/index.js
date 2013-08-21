@@ -1,7 +1,9 @@
 var request = require('request');
-// var sha1 = require('sha1');
 var crypto = require('crypto');
+var parser = require('xml2json');
 var config = require('./../config');
+
+var fleetMaticsLastResponse;
 
 function makeStamp(d) { // Date d
     var y = d.getUTCFullYear(),
@@ -198,22 +200,9 @@ exports.getFleet = function(req, res){
     var now = new Date();
     var timestamp = makeStamp(now);
     var rawsig = fleetguid + timestamp
-    // var hash = sha1(rawsig).toUpperCase();
     var hash = crypto.createHash('sha1').update(rawsig).digest('hex').toUpperCase();    
-
-    console.log('guid: ' + fleetguid);
-    console.log('token: ' + fleettoken);
-    console.log('timestamp: ' + timestamp);
-    console.log('sig: ' + hash);
-
     var fleeturi = "http://www.fleetmatics-usa.com/FMAPI/apitrackingservice.svc/getvehpos"
-    // var fleeturi = "http://www.fleetmatics-usa.com/FMAPI/apitrackingservice.svc"
-    // var qs ="t=" + fleettoken + "&s=" + hash + "&ts=" + timestamp;
     var qs= {t:fleettoken, s: hash, ts: timestamp}
-    console.log('uri: ' + fleeturi);
-    console.log('qs: ' + qs);
-
-    // console.log(fleeturi + '?t=' + fleettoken + '&s=' + hash + '&ts=' + timestamp);
 
     request(
       { method: 'GET'
@@ -222,25 +211,29 @@ exports.getFleet = function(req, res){
       , 'Content-Type': 'application/xml'
       }
     , function (error, response, body) {
-        // if(response.statusCode == 200){
-        //   console.log(body);
-        //   res.send(body);
-        // } else if(response.statusCode == 403) {
-        //   res.clearCookie('bechtel_token');
-        //   res.redirect('/');
-        // } else {
-        //   console.log('error: '+ response.statusCode)
-        //   console.log(body)
-        //   res.send({});
-        // }
+        if(response.statusCode == 200){
+          // console.log(body);
+          var json = parser.toJson(body);
 
-          console.log('error: '+ response.statusCode);
-          console.log(body);
+          var jdata = JSON.parse(json);
+          if (jdata.VehPosResponse.position_list.CVehiclePos == undefined) {
+            json = fleetMaticsLastResponse
+          } else {
+            fleetMaticsLastResponse = json
+          }
+
+          console.log(json);
+          res.send(json);
+
+        } else {
+          console.log('error: '+ response.statusCode)
+          console.log(body)
+          res.send({});
+        }
 
       }
     )
 
-    // res.render('main', { markers: {} })
   }
 };
 

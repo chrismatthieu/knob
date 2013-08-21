@@ -9,7 +9,7 @@ block body
     div#map-canvas(data-role="content")
 
 
-    div.ui-bar(data-role="footer", data-position="fixed")
+    div.ui-bar-a.ui-footer(data-role="footer", data-position="fixed", role="contentinfo")
       div.ui-navbar.ui-mini(data-role="navbar", role="navigation")
         ul.ui-grid-d
           li
@@ -21,6 +21,11 @@ block body
             a(href="/markets/1", data-icon="star", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
               span.ui-btn-inner 
                 span.ui-btn-text Markets
+              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+          li
+            a(href="javascript:fleet()", data-icon="star", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+              span.ui-btn-inner 
+                span.ui-btn-text Fleet
               span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
           li
             a(href="/settings", data-icon="gear", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
@@ -46,7 +51,7 @@ block body
             );    
     }
 
-    function initialize() {
+    //- function initialize() {
 
       var map = new google.maps.Map(document.getElementById("map-canvas"));
 
@@ -87,9 +92,9 @@ block body
       google.maps.event.trigger(map, 'resize');    
       
 
-      function addMarker (lat, long, title, description) {
+      function addMarker (lat, long, title, description, icon) {
         var myLatlng = new google.maps.LatLng(lat,long);
-        var marker = new google.maps.Marker({ position: myLatlng, map: map });
+        var marker = new google.maps.Marker({ position: myLatlng, map: map, icon: icon });
 
         var contentString = '<div id="content">'+
             '<div id="siteNotice">'+
@@ -131,7 +136,7 @@ block body
           sleep(1000); // added to give map time to load
           var jdata = JSON.parse(data);
           $.each(jdata.items, function(index, element) {
-            addMarker(element.Latitude, element.Longitude, element.SiteName, 'GC: ' + element.GeneralContractorPOC + ' (' + element.GeneralContractorName + ')<br>Status: ' + element.SiteStatus)
+            addMarker(element.Latitude, element.Longitude, element.SiteName, 'GC: ' + element.GeneralContractorPOC + ' (' + element.GeneralContractorName + ')<br>Status: ' + element.SiteStatus, '/images/celltower-48.png')
           });
           //- var pos = new google.maps.LatLng(jdata.items[0].Latitude, jdata.items[0].Longitude);
           var pos = new google.maps.LatLng(jdata.items[1].Latitude, jdata.items[1].Longitude);
@@ -140,7 +145,59 @@ block body
         }  
       });
 
-    };    
+    //- };   
+
+    function fleet(){
+      console.log('calling getFleet');
+      $.ajax({
+        url: "/getFleet",
+        cache: false,
+        type: "GET",
+        success: function(data) { 
+          //- sleep(1000); // added to give map time to load
+          console.log(data);
+
+          //- VehicleID: 3413199,
+          //-  Label: 'UHR827 POOL',
+          //-  RegNumber: 'UHR827',
+          //-  VehPosDateTimeUTC: '2013-08-21T17:21:08',
+          //-  Latitude: 37.7512245,
+          //-  Longitude: -121.778824,
+          //-  Heading: 'NW',
+          //-  SpeedKPH: 0,
+          //-  OdometerKM: 32963,
+          //-  EventCode: 19,
+          //-  GpsStrength: 3,
+          //-  Owner: 'San Ramon',
+          //-  SpeedMPH: 0,
+          //-  OdometerMiles: 20482,
+          //-  DriverName: {},
+          //-  DriverID: [Object],
+          //-  EventCodeId: 202,
+          //-  EventType: 'Shutdown',
+          //-  PTOs: {} }
+
+          //- FleetMatics only allows API calls every hour. Need to manage this response on the server
+          //- if jdata.VehPosResponse.position_list[0] == undefined {
+          //-   jdata = localStorage.getItem("fleet")
+          //- } else {
+          //-   localStorage.setItem("fleet", jdata);
+          //- }
+
+          if (data != ''){
+            console.log('received data from fleetmatics');
+            var jdata = JSON.parse(data);
+
+            $.each(jdata.VehPosResponse.position_list.CVehiclePos, function(index, element) {
+              console.log('adding marker: ' + element.Label);
+              addMarker(element.Latitude, element.Longitude, element.RegNumber, 'Vehicle: ' + element.Label + ' (' + element.Owner + ')<br>Heading: ' + element.Heading + ' at ' + element.SpeedKPH + ' kph', '/images/dumptruck-32.png');
+            });
+          }
+
+        }  
+      });
+    }
+
 
 
 
