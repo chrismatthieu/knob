@@ -198,8 +198,8 @@ exports.getFleet = function(req, res){
     var now = new Date();
     var timestamp = makeStamp(now);
     var rawsig = fleetguid + timestamp
-    var hash = sha1(rawsig).toUpperCase();
-    // var hash = crypto.createHash('sha1').update(rawsig).digest('hex').toUpperCase();    
+    // var hash = sha1(rawsig).toUpperCase();
+    var hash = crypto.createHash('sha1').update(rawsig).digest('hex').toUpperCase();    
 
     console.log('guid: ' + fleetguid);
     console.log('token: ' + fleettoken);
@@ -213,7 +213,7 @@ exports.getFleet = function(req, res){
     console.log('uri: ' + fleeturi);
     console.log('qs: ' + qs);
 
-    console.log(fleeturi + '?t=' + fleettoken + '&s=' + hash + '&ts=' + timestamp);
+    // console.log(fleeturi + '?t=' + fleettoken + '&s=' + hash + '&ts=' + timestamp);
 
     request(
       { method: 'GET'
