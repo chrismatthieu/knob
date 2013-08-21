@@ -1,5 +1,6 @@
 var request = require('request');
-var sha1 = require('sha1');
+// var sha1 = require('sha1');
+var crypto = require('crypto');
 var config = require('./../config');
 
 function makeStamp(d) { // Date d
@@ -198,6 +199,7 @@ exports.getFleet = function(req, res){
     var timestamp = makeStamp(now);
     var rawsig = fleetguid + timestamp
     var hash = sha1(rawsig).toUpperCase();
+    // var hash = crypto.createHash('sha1').update(rawsig).digest('hex').toUpperCase();    
 
     console.log('guid: ' + fleetguid);
     console.log('token: ' + fleettoken);
@@ -206,7 +208,8 @@ exports.getFleet = function(req, res){
 
     var fleeturi = "http://www.fleetmatics-usa.com/FMAPI/apitrackingservice.svc/getvehpos"
     // var fleeturi = "http://www.fleetmatics-usa.com/FMAPI/apitrackingservice.svc"
-    var qs ="t=" + fleettoken + "&s=" + hash + "&ts=" + timestamp;
+    // var qs ="t=" + fleettoken + "&s=" + hash + "&ts=" + timestamp;
+    var qs= {t:fleettoken, s: hash, ts: timestamp}
     console.log('uri: ' + fleeturi);
     console.log('qs: ' + qs);
 

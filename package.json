@@ -5,6 +5,5 @@
   , "dependencies": {
       "express": "*"
     , "jade": ">= 0.0.1"
-    , "sha1": "*"
   }
 }
