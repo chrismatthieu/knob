@@ -6,6 +6,7 @@
       "express": "*"
     , "jade": ">= 0.0.1"
     , "xml2json": "*"
+    , "request": "*"
   },
   "engines": {
     "node": "0.10.x",
