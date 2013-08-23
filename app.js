@@ -36,6 +36,7 @@ app.get('/main', routes.main);
 app.get('/markets/:project', routes.markets);
 app.get('/sites/:market', routes.sites);
 app.get('/settings', routes.settings);
+app.get('/getMarkets/:market', routes.getMarkets);
 app.get('/getMarkets', routes.getMarkets);
 app.get('/getSites/:market', routes.getSites);
 app.get('/getFleet', routes.getFleet);
@@ -86,6 +87,6 @@ app.get('/callback', function (req, res) {
 
 });
 
-app.listen(config.port, function () {
+app.listen(process.env.PORT || config.port, function () {
     console.log("Express server listening on port %d in %s mode", config.port, app.settings.env);
 });

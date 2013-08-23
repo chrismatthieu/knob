@@ -39,7 +39,7 @@ exports.main = function(req, res){
       { method: 'GET'
       , uri: 'https://api.becpsn.com/svc1/v2/tracking/towers/projects/'
       , 'content-type': 'application/json'
-      , headers: {"X-myPSN-AppKey": "43a6aba88a422d696c1d9f50e8e4831f", "Authorization": req.cookies.bechtel_token}
+      , headers: {"X-myPSN-AppKey": config.appKey, "Authorization": req.cookies.bechtel_token}
       }
     , function (error, response, body) {
         if(response.statusCode == 200){
@@ -68,7 +68,7 @@ exports.markets = function(req, res){
       { method: 'GET'
       , uri: 'https://api.becpsn.com/svc1/v2/tracking/towers/markets/'
       , 'content-type': 'application/json'
-      , headers: {"X-myPSN-AppKey": "43a6aba88a422d696c1d9f50e8e4831f", "Authorization": req.cookies.bechtel_token}
+      , headers: {"X-myPSN-AppKey": config.appKey, "Authorization": req.cookies.bechtel_token}
       }
     , function (error, response, body) {
         if(response.statusCode == 200){
@@ -132,11 +132,18 @@ exports.getMarkets = function(req, res){
     res.redirect('/');
   } else {
 
+    console.log(req.params.market);
+    if (req.params.market){
+      var uri = 'https://api.becpsn.com/svc1/v2/tracking/towers/markets/' + req.params.market
+    } else {
+      var uri = 'https://api.becpsn.com/svc1/v2/tracking/towers/markets/'      
+    }
+
     request(
       { method: 'GET'
-      , uri: 'https://api.becpsn.com/svc1/v2/tracking/towers/markets/'
+      , uri: uri
       , 'content-type': 'application/json'
-      , headers: {"X-myPSN-AppKey": "43a6aba88a422d696c1d9f50e8e4831f", "Authorization": req.cookies.bechtel_token}
+      , headers: {"X-myPSN-AppKey": config.appKey, "Authorization": req.cookies.bechtel_token}
       }
     , function (error, response, body) {
         if(response.statusCode == 200){
@@ -166,7 +173,7 @@ exports.getSites = function(req, res){
       { method: 'GET'
       , uri: 'https://api.becpsn.com/svc1/v2/tracking/towers/markets/' + req.params.market + '/Sites'
       , 'content-type': 'application/json'
-      , headers: {"X-myPSN-AppKey": "43a6aba88a422d696c1d9f50e8e4831f", "Authorization": req.cookies.bechtel_token}
+      , headers: {"X-myPSN-AppKey": config.appKey, "Authorization": req.cookies.bechtel_token}
       }
     , function (error, response, body) {
         if(response.statusCode == 200){

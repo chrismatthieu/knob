@@ -6,146 +6,200 @@ block body
     div(data-role="header", data-theme="b")
       h1 Towers
 
-    div#map-canvas(data-role="content")
+    div.container-fluid
+      div.row
+        div.sidebar.col-md-2(style="padding-left:30px;")
+        div.googlemap.col-md-10
+          div#map-canvas(data-role="content")
 
 
-    div.ui-bar-a.ui-footer(data-role="footer", data-position="fixed", role="contentinfo")
-      div.ui-navbar.ui-mini(data-role="navbar", role="navigation")
-        ul.ui-grid-d
-          li
-            a(href="/main", data-icon="home", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
-              span.ui-btn-inner 
-                span.ui-btn-text Home
-              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
-          li
-            a(href="/markets/1", data-icon="star", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
-              span.ui-btn-inner 
-                span.ui-btn-text Markets
-              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
-          li
-            a(href="javascript:fleet()", data-icon="star", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
-              span.ui-btn-inner 
-                span.ui-btn-text Fleet
-              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
-          li
-            a(href="/settings", data-icon="gear", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
-              span.ui-btn-inner
-                span.ui-btn-text Settings
-              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
-          li
-            a(href="/logout", data-icon="delete", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
-              span.ui-btn-inner 
-                span.ui-btn-text Logout
-              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+          div.ui-bar-a.ui-footer(data-role="footer", data-position="fixed", role="contentinfo")
+            div.ui-navbar.ui-mini(data-role="navbar", role="navigation")
+              ul.ui-grid-d
+                li
+                  a(href="/main", data-icon="home", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+                    span.ui-btn-inner 
+                      span.ui-btn-text Home
+                    span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+                li
+                  a(href="/markets/1", data-icon="grid", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+                    span.ui-btn-inner 
+                      span.ui-btn-text Markets
+                    span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+                li
+                  a(href="javascript:fleet()", data-icon="plus", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+                    span.ui-btn-inner
+                      span.ui-btn-text Fleet
+                    span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+                li
+                  a(href="/settings", data-icon="gear", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+                    span.ui-btn-inner
+                      span.ui-btn-text Settings
+                    span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+                li
+                  a(href="/logout", data-icon="delete", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+                    span.ui-btn-inner 
+                      span.ui-btn-text Logout
+                    span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
 
 
 
   script.
 
+    //- add or remove sidebar based on media query (phone vs. tablet/laptop)
+    enquire.register("screen and (max-width: 480px)", { match : function() {
+      $(".sidebar").hide();
+    },unmatch : function() {}    
+    });
+
+    enquire.register("screen and (min-width: 768px)", { match : function() {
+      $(".sidebar").show();
+    },unmatch : function() {}
+    });
+
+
     function resizeMap() {
       $('[data-role=content]')
-            .height(
-              $(window).height() - 
-              (5 + $('[data-role=header]').last().height() 
-              + $('[data-role=footer]').last().height())
-            );    
+      .height(
+        $(window).height() - 
+        (5 + $('[data-role=header]').last().height() 
+        + $('[data-role=footer]').last().height())
+      );    
     }
 
-    //- function initialize() {
+    var map = new google.maps.Map(document.getElementById("map-canvas"));
 
-      var map = new google.maps.Map(document.getElementById("map-canvas"));
+    navigator.geolocation.getCurrentPosition(success);
+    function success(position) {
+      var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-      navigator.geolocation.getCurrentPosition(success);
-      function success(position) {
-        var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      if (localStorage.getItem("maptemplate") != 'toner' && localStorage.getItem("maptemplate") != 'terrain' && localStorage.getItem("maptemplate") != 'watercolor') { 
 
-        if (localStorage.getItem("maptemplate") != 'toner' && localStorage.getItem("maptemplate") != 'terrain' && localStorage.getItem("maptemplate") != 'watercolor') { 
-
-         map.setOptions({
-            zoom: 10,
-            center: pos,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-          });
-
-        } else {
-
-          // replace "toner" here with "terrain" or "watercolor"
-          var layer = localStorage.getItem("maptemplate");
-
-          map.setOptions({
-            zoom: 10,
-            center: pos,
-            mapTypeId: layer,
-            mapTypeControlOptions: {
-                mapTypeIds: [layer]
-            }
-
-          });
-
-          map.mapTypes.set(layer, new google.maps.StamenMapType(layer));      
-
-        }
-
-      }      
-
-      resizeMap();
-      google.maps.event.trigger(map, 'resize');    
-      
-
-      function addMarker (lat, long, title, description, icon) {
-        var myLatlng = new google.maps.LatLng(lat,long);
-        var marker = new google.maps.Marker({ position: myLatlng, map: map, icon: icon });
-
-        var contentString = '<div id="content">'+
-            '<div id="siteNotice">'+
-            '</div>'+
-            '<h1 id="firstHeading" class="firstHeading">' + title + '</h1>'+
-            '<div id="bodyContent">'+ description + 
-            '</div>'+
-            '</div>';
-
-        var infowindow = new google.maps.InfoWindow({
-            content: contentString
+       map.setOptions({
+          zoom: 10,
+          center: pos,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
         });
 
-        google.maps.event.addListener(map, 'click', function() {
-          infowindow.close();
+      } else {
+
+        // replace "toner" here with "terrain" or "watercolor"
+        var layer = localStorage.getItem("maptemplate");
+
+        map.setOptions({
+          zoom: 10,
+          center: pos,
+          mapTypeId: layer,
+          mapTypeControlOptions: {
+              mapTypeIds: [layer]
+          }
+
         });
 
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.open(map,marker);        
-        });   
-
-        google.maps.event.addDomListener(window, 'resize', function() {
-          resizeMap();
-          google.maps.event.trigger(map, 'resize');  
-        });      
+        map.mapTypes.set(layer, new google.maps.StamenMapType(layer));      
 
       }
 
-      function sleep(milliSeconds){
-        var startTime = new Date().getTime(); // get the current time
-        while (new Date().getTime() < startTime + milliSeconds); // hog cpu
-      }
+    }      
 
-      $.ajax({
-        url: "/getSites/#{market}",
-        cache: false,
-        type: "GET",
-        success: function(data) { 
-          sleep(1000); // added to give map time to load
-          var jdata = JSON.parse(data);
-          $.each(jdata.items, function(index, element) {
-            addMarker(element.Latitude, element.Longitude, element.SiteName, 'GC: ' + element.GeneralContractorPOC + ' (' + element.GeneralContractorName + ')<br>Status: ' + element.SiteStatus, '/images/celltower-48.png')
-          });
-          //- var pos = new google.maps.LatLng(jdata.items[0].Latitude, jdata.items[0].Longitude);
-          var pos = new google.maps.LatLng(jdata.items[1].Latitude, jdata.items[1].Longitude);
-          map.setCenter(pos)
+    resizeMap();
+    google.maps.event.trigger(map, 'resize');    
+    
 
-        }  
+    function addMarker (lat, long, title, description, icon) {
+      var myLatlng = new google.maps.LatLng(lat,long);
+      var marker = new google.maps.Marker({ position: myLatlng, map: map, icon: icon });
+
+      var contentString = '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          '<h1 id="firstHeading" class="firstHeading">' + title + '</h1>'+
+          '<div id="bodyContent">'+ description + 
+          '</div>'+
+          '</div>';
+
+      var infowindow = new google.maps.InfoWindow({
+          content: contentString
       });
 
-    //- };   
+      google.maps.event.addListener(map, 'click', function() {
+        infowindow.close();
+      });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(map,marker);        
+      });   
+
+      google.maps.event.addDomListener(window, 'resize', function() {
+        resizeMap();
+        google.maps.event.trigger(map, 'resize');  
+      });      
+
+    }
+
+    function sleep(milliSeconds){
+      var startTime = new Date().getTime(); // get the current time
+      while (new Date().getTime() < startTime + milliSeconds); // hog cpu
+    }
+
+    //- Get Towers for map
+    $.ajax({
+      url: "/getSites/#{market}",
+      cache: false,
+      type: "GET",
+      success: function(data) { 
+        //- sleep(1000); // added to give map time to load
+
+        //- {"ArchitecturalEngineeringFirmName":"","BechtelSiteId":"AZ0039","BuildScope":"LTE Wave 1B","ClientSiteId":"PHNXAZP831","ClusterName":"5","EngineeringPOC":"Michael Magin","FieldContractorPOC":"Dan Sutton","GeneralContractorName":"TEAM","GeneralContractorPOC":"Dan Sutton","Id":36229,"Latitude":"33.4441","Longitude":"-112.272","MarketKey":625,"MarketName":"Desert Southwest","MileStones":5055,"SiteAcquisitionFirmName":"Bechtel","SiteAcquisitionPOC":"Colin Phipps","SiteAddress":"9419 West Van Buren Street","SiteCity":"TOLLESON","SiteCounty":"Maricopa","SiteName":"W HARRISON & N 99 AVE","SiteState":"AZ","SiteStatus":"In Progress","SiteZip":"85353","IsPurchaseOrderInPlace":true,"IsLeasePending":true,"IsLeaseSigned":true,"IsZoningSubmitted":true,"IsZoningApproved":true,"IsSiteAcquisitionReleasedToConstruction":true,"IsDesignVisitComplete":false,"IsIssuedForConstruction":true,"IsConstructionStarted":true,"IsConstructionComplete":true,"IsTurnoverPackageComplete":false,"IsFinalSiteAcceptanceReceived":false,"IsSiteReadyForEquipment":true}
+
+        var jdata = JSON.parse(data);
+        $.each(jdata.items, function(index, element) {
+          addMarker(element.Latitude, element.Longitude, element.SiteName, 'GC: ' + element.GeneralContractorPOC + ' (' + element.GeneralContractorName + ')<br>FC: ' + element.FieldContractorPOC + '<br>Address: ' + element.SiteAddress + '<br>Milestones: ' + element.MileStones + '<br>Status: ' + element.SiteStatus, '/images/celltower-48.png')
+        });
+        //- var pos = new google.maps.LatLng(jdata.items[0].Latitude, jdata.items[0].Longitude);
+        var pos = new google.maps.LatLng(jdata.items[1].Latitude, jdata.items[1].Longitude);
+        map.setCenter(pos)
+
+      }  
+    });
+
+    //- Get Market data for sidebar
+    //- {"limit":100,"start":1,"totalcount":1,"items":[{"Latitude":"37.771305","Longitude":"-121.963917","MarketAddress":"2430 Camino Ramon, Suite 240","MarketCity":"San Ramon","MarketId":4,"MarketCode":"NORCAL","MarketKey":635,"MarketManager":"Andy Millunzi","MarketName":"Northern California","MarketState":"CA","MarketZip":"94583","AllSites":803,"CefaAssessments":54.0,"CefaCompleted":27.0,"CqiDqrPassRate":91.40,"CqiFcPassRate":98.2951,"CqiPassingRate":97.3239,"Employees":137,"LostWorkDayCases":0.0,"RecordableEventCases":0.0,"PurchaseOrdersInPlace":667,"LeasePending":510,"LeaseSigned":415,"ZoningSubmitted":586,"ZoningApproved":507,"SiteAcquisitionReleasedToConstruction":314,"DesignVisitComplete":0,"IssuedForConstruction":417,"ConstructionStarted":267,"ConstructionComplete":184,"TurnoverPackageComplete":5,"FinalSiteAcceptanceReceived":2,"SiteReadyForEquipment":215}]}
+    var uri = "/getMarkets/#{market}";
+    $.ajax({
+      url: uri,
+      cache: false,
+      type: "GET",
+      success: function(marketdata) { 
+        var mdata = JSON.parse(marketdata);
+        $('.sidebar').html('');
+        $('.sidebar').append("<h3>" + mdata.items[0].MarketName + "</h3>")
+        $('.sidebar').append("<p><b>Manager</b>:" + mdata.items[0].MarketManager + "</p>")
+        $('.sidebar').append("<p><b>Sites</b>:" + mdata.items[0].AllSites + "</p>")
+        $('.sidebar').append("<p><b>Employees</b>:" + mdata.items[0].Employees + "</p>")
+        $('.sidebar').append("<p><b>Cefa Assessments</b>:" + mdata.items[0].CefaAssessments + "</p>")
+        $('.sidebar').append("<p><b>Cefa Completed</b>:" + mdata.items[0].CefaCompleted + "</p>")
+        $('.sidebar').append("<p><b>Cqi Dqr Passrate</b>:" + mdata.items[0].CqiDqrPassRate + "</p>")
+        $('.sidebar').append("<p><b>Cqi Fc Passrate</b>:" + mdata.items[0].CqiFcPassRate + "/p>")
+        $('.sidebar').append("<p><b>Cqi Passing Rate</b>:" + mdata.items[0].CqiPassingRate + "</p>")
+        $('.sidebar').append("<p><b>Lost WorkDay Cases</b>:" + mdata.items[0].LostWorkDayCases + "</p>")
+        $('.sidebar').append("<p><b>Recordable Event Cases</b>:" + mdata.items[0].RecordableEventCases + "</p>")
+        $('.sidebar').append("<p><b>Purchase Orders In Place</b>:" + mdata.items[0].PurchaseOrdersInPlace + "</p>")
+        $('.sidebar').append("<p><b>Leases Pending</b>:" + mdata.items[0].LeasePending + "</p>")
+        $('.sidebar').append("<p><b>Leases Signed</b>:" + mdata.items[0].LeaseSigned + "</p>")
+        $('.sidebar').append("<p><b>Zoning Submitted</b>:" + mdata.items[0].ZoningSubmitted + "</p>")
+        $('.sidebar').append("<p><b>Zoning Approved</b>:" + mdata.items[0].ZoningApproved + "</p>")
+        $('.sidebar').append("<p><b>Site Acquisitions Released To Construction</b>:" + mdata.items[0].SiteAcquisitionReleasedToConstruction + "</p>")
+        $('.sidebar').append("<p><b>Design Visits Complete</b>:" + mdata.items[0].DesignVisitComplete + "</p>")
+        $('.sidebar').append("<p><b>Issued For Construction</b>:" + mdata.items[0].IssuedForConstruction + "</p>")
+        $('.sidebar').append("<p><b>Construction Started</b>:" + mdata.items[0].ConstructionStarted + "</p>")
+        $('.sidebar').append("<p><b>Construction Complete</b>:" + mdata.items[0].ConstructionComplete + "</p>")
+        $('.sidebar').append("<p><b>Turnover Packages Complete</b>:" + mdata.items[0].TurnoverPackageComplete + "</p>")
+        $('.sidebar').append("<p><b>Final Site Acceptance Received</b>:" + mdata.items[0].FinalSiteAcceptanceReceived + "</p>")
+        $('.sidebar').append("<p><b>Sites Ready For Equipment</b>:" + mdata.items[0].SiteReadyForEquipment + "</p>")
+      }  
+    });
+
 
     function fleet(){
       console.log('calling getFleet');
