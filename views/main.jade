@@ -7,20 +7,20 @@ block body
       h1 Towers
       //- a(href="/", data-icon="home") Home
 
-    img.main-image(src="/images/network.png", width="100%", height="300px")
+    img.main-image(src="/images/arizona-flag.png", width="100%", height="300px")
     div(data-role="content")
       section.above-list
       ul(data-role="listview")
 
-        if projects && projects.length > 0
-          for p in projects
-            li
-              a(href="/markets/#{p.ProjectId}")
-                strong #{p.ProjectName}
-          else
-            li
-              a(href="/markets/1")
-                strong No markets (refresh)
+        // if projects && projects.length > 0
+        //   for p in projects
+        //     li
+        //       a(href="/markets/#{p.ProjectId}", data-transition="slide")
+        //         strong #{p.ProjectName}
+        //   else
+        //     li
+        //       a(href="/markets/1", data-transition="slide")
+        //         strong No markets (refresh)
 
 
 
@@ -28,22 +28,22 @@ block body
       div.ui-navbar.ui-mini(data-role="navbar", role="navigation")
         ul.ui-grid-d
           li
-            a(href="/main", data-icon="home", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+            a(href="/main", data-icon="home", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a", data-transition="fade")
               span.ui-btn-inner 
                 span.ui-btn-text Home
               span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
           li
-            a(href="/markets/1", data-icon="grid", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+            a(href="/markets/1", data-icon="grid", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a", data-transition="fade")
               span.ui-btn-inner 
                 span.ui-btn-text Markets
               span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
           li
-            a(href="/settings", data-icon="gear", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+            a(href="/settings", data-icon="gear", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a", data-transition="fade")
               span.ui-btn-inner
                 span.ui-btn-text Settings
               span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
           li
-            a(href="/logout", data-icon="delete", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a")
+            a(href="/logout", data-icon="delete", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a", data-transition="fade")
               span.ui-btn-inner 
                 span.ui-btn-text Logout
               span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;

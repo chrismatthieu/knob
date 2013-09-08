@@ -1,0 +1,64 @@
+extends layout
+
+block body       
+
+  div(data-role="page")
+    div(data-role="header", data-theme="b")
+      h1 Knights on Bikes
+      a.ui-btn-left(href="#", onclick="javascript:window.history.back();", data-icon="arrow-l", data-mini="true", data-role="button", data-inline="true") Back
+
+      // a(href="/", data-icon="home") Home
+
+    img.main-image(src="/images/#{state}.png", width="100%", height="200px")
+
+    div(data-role="content")
+      section.above-list
+
+      div.content
+        div.content-padded
+          ul(data-role="listview")
+
+            if events && events.length > 0
+              for u in events
+                li
+                  a(href="#{u.link}", data-transition="slide")
+
+                    if u.subject 
+                      h2 #{u.subject} 
+                      div.ui-li-desc(style="white-space: normal;") #{u.description} 
+                    else
+                      div.ui-li-desc(style="white-space: normal;") #{u.description} 
+
+
+              // li 
+              //   a(href="/profile/1", data-transition="slide") 
+              //     img(src="/images/1.jpg", width="100px", height="100px")
+              //     div.span12 Bill Clower (POS)
+
+              // li 
+              //   a(href="/profile/2", data-transition="slide") 
+              //     img(src="/images/2.jpg", width="100px", height="100px")
+              //     div.span12 Chris Matthieu (POD Phoenix)
+
+
+
+
+    div.ui-bar(data-role="footer", data-position="fixed")
+      div.ui-navbar.ui-mini(data-role="navbar", role="navigation")
+        ul.ui-grid-d
+          li
+            a(href="/", data-icon="home", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a", data-transition="fade")
+              span.ui-btn-inner 
+                span.ui-btn-text Home
+              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+          // li
+          //   a(href="/settings", data-icon="gear", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a", data-transition="fade")
+          //     span.ui-btn-inner
+          //       span.ui-btn-text Settings
+          //     span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+          li
+            a(href="/logout", data-icon="star", data-corners="false", data-shadow="false", data-iconshadow="true", data-wrapperels="span", data-iconpos="top", data-theme="a", data-inline="true", class="ui-btn ui-btn-inline ui-btn-icon-top ui-btn-up-a", data-transition="fade")
+              span.ui-btn-inner 
+                span.ui-btn-text States
+              span.ui-icon.ui-icon-grid.ui-icon-shadow &nbsp;
+
