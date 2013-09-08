@@ -22,10 +22,14 @@ block body
             p.welcome #{user.title.toUpperCase()} #{user.diocese.toUpperCase()}
 
     p.welcome.col-sm-12
-      a(href="mailto:#{user.email}", data-role="button", data-icon="edit", data-corners="false", data-theme="b") Email
+      a(href="tel:#{user.phone}", data-role="button", data-icon="grid", data-corners="false", data-theme="b") Call
 
     p.welcome.col-sm-12
-      a(href="tel:#{user.phone}", data-role="button", data-icon="forward", data-corners="false", data-theme="b") Call
+      a(href="sms:#{user.phone}", data-role="button", data-icon="edit", data-corners="false", data-theme="b") SMS
+
+    p.welcome.col-sm-12
+      a(href="mailto:#{user.email}", data-role="button", data-icon="edit", data-corners="false", data-theme="b") Email
+
 
 
 
